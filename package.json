@@ -16,7 +16,9 @@
     "xza": "2.x"
   },
   "devDependencies": {
-    "coffeescript": "^2.2.3"
+    "ava": "^0.25.0",
+    "coffeescript": "^2.2.3",
+    "nyc": "^13.0.1"
   },
   "ava": {
     "files": [
