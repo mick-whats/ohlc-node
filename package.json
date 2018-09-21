@@ -1,0 +1,38 @@
+{
+  "name": "ohlc-node",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "ava",
+    "compile": "coffee -o ./ -cw coffee/",
+    "watch": "npm run compile &ava -w",
+    "cover": "nyc ava",
+    "report": "nyc report --reporter=html",
+    "update:snap": "ava --update-snapshots"
+  },
+  "keywords": [],
+  "dependencies": {
+    "moment": "^2.22.2",
+    "rrq": "1.x",
+    "xza": "2.x"
+  },
+  "devDependencies": {
+    "coffeescript": "^2.2.3"
+  },
+  "ava": {
+    "files": [
+      "test/*.js"
+    ],
+    "source": [
+      "**/*.js"
+    ],
+    "failFast": false,
+    "serial": false,
+    "tap": false,
+    "verbose": true,
+    "color": true,
+    "watch": false
+  },
+  "main": "lib/index.js",
+  "license": "MIT",
+  "author": "mick-whats"
+}
