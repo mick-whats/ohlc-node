@@ -1,5 +1,5 @@
 {
-  "name": "ohlc-node",
+  "name": "ohlc",
   "version": "1.0.0",
   "scripts": {
     "test": "ava",
@@ -35,6 +35,10 @@
     "watch": false
   },
   "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mick-whats/ohlc-node"
+  },
   "license": "MIT",
   "author": "mick-whats"
 }
