@@ -110,6 +110,26 @@
     return t.is(samples[2].sma5, 346);
   });
 
+  test('toChartData()', function(t) {
+    var chartData, prices;
+    prices = new ohlc(arrayData);
+    chartData = prices.toChartData();
+    t.deepEqual(Object.keys(chartData), ['candle', 'volume']);
+    t.deepEqual(chartData.candle[0], [1483488000000, 348, 350, 346, 350]);
+    return t.deepEqual(chartData.volume[0], [1483488000000, 68700]);
+  });
+
+  test('toChartData(period, opts)', function(t) {
+    var chartData, prices;
+    prices = new ohlc(arrayData);
+    chartData = prices.toChartData(null, {
+      sma: [5, 25, 75]
+    });
+    t.deepEqual(Object.keys(chartData), ['candle', 'volume', 'sma5', 'sma25', 'sma75']);
+    t.deepEqual(chartData.sma5[0], [1483488000000, null]);
+    return t.deepEqual(chartData.sma5[10], [1484784000000, 341]);
+  });
+
   test('array range', function(t) {
     var arr;
     arr = [0, 1, 2, 3, 4, 5];

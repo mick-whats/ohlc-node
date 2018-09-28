@@ -70,5 +70,39 @@ class Ohlc
         Low: _.minBy(monthItems,'Low').Low
         Volume: _.sumBy(monthItems, 'Volume')
       }
-    
+  toChartData: (period, opts)->
+    opts = opts or {}
+    obj = {}
+    fn = switch period
+      when 'm', 'M','months', 'Months'
+        'toMonths'
+      when 'w', 'W','weeks', 'Weeks'
+        'toWeeks'
+      else
+        'toDays'
+    items = @[fn]()
+    obj.candle = items.map (item)->
+      [
+        moment.utc(item.Date).valueOf()
+        item.Open
+        item.High
+        item.Low
+        item.Close
+      ]
+    obj.volume = items.map (item)->
+      [
+        moment.utc(item.Date).valueOf()
+        item.Volume
+      ]
+    if opts.sma and _.isArray(opts.sma)
+      opts.sma.forEach (smaRange) =>
+        smaRange = Number(smaRange)
+        if _.isNaN(smaRange)
+          return
+        propName = "sma#{smaRange}"
+        @addSma(smaRange)
+        obj[propName] = @items.map (item,i)-> [moment.utc(item.Date).valueOf(),item[propName]]
+    return obj
+
+        
 module.exports = Ohlc
