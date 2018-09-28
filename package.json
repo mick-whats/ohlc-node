@@ -11,9 +11,8 @@
   },
   "keywords": [],
   "dependencies": {
-    "moment": "^2.22.2",
-    "rrq": "1.x",
-    "xza": "2.x"
+    "lodash": "^4.17.11",
+    "moment": "^2.22.2"
   },
   "devDependencies": {
     "ava": "^0.25.0",

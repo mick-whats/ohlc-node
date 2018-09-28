@@ -4,7 +4,7 @@
 
   assert = require('assert');
 
-  _ = require('xza').lodash;
+  _ = require('lodash');
 
   moment = require('moment');
 
