@@ -212,6 +212,17 @@
     });
   });
 
+  test('toChartData() by readme', function(t) {
+    var chartData;
+    chartData = ohlc(arrayData).sma(5, 25).toChartData();
+    t.deepEqual(Object.keys(chartData), ['candle', 'volume', 'sma5', 'sma25']);
+    t.deepEqual(chartData.candle[90], [1494979200000, 370, 372, 365, 369]);
+    t.deepEqual(chartData.volume[90], [1494979200000, 32300]);
+    t.deepEqual(chartData.sma5[90], [1494979200000, 372]);
+    t.deepEqual(chartData.sma25[90], [1494979200000, 359]);
+    return t.is(moment(chartData.candle[90][0]).format('YYYY-MM-DD'), '2017-05-17');
+  });
+
   test('toChartData()', function(t) {
     var chartData;
     chartData = ohlc(arrayData).toChartData();
