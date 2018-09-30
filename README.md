@@ -1,9 +1,8 @@
 # ohlc
 
 [![npm version](https://badge.fury.io/js/ohlc.svg)](https://badge.fury.io/js/ohlc)
-
 ![npm](https://img.shields.io/npm/dw/ohlc.svg)
-
+[![](https://data.jsdelivr.com/v1/package/npm/ohlc/badge)](https://www.jsdelivr.com/package/npm/ohlc)
 [![Build Status](https://travis-ci.org/mick-whats/ohlc-node.svg?branch=master)](https://travis-ci.org/mick-whats/ohlc-node)
 ## sumple data
 
@@ -119,6 +118,9 @@ ohlc(arrayData).value('monthly')
 ohlc(arrayData).toMonthly()
 
 ```
+
+## toChartData(period)
+
 
 ## start() and end()
 
