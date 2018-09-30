@@ -1,5 +1,10 @@
 # ohlc
 
+[![npm version](https://badge.fury.io/js/ohlc.svg)](https://badge.fury.io/js/ohlc)
+
+![npm](https://img.shields.io/npm/dw/ohlc.svg)
+
+[![Build Status](https://travis-ci.org/mick-whats/ohlc-node.svg?branch=master)](https://travis-ci.org/mick-whats/ohlc-node)
 ## sumple data
 
 ```data.json
@@ -157,3 +162,6 @@ ohlc(arrayData).sma(5, 25, 75).toDaily();
   ...
 ]
 ```
+
+## TODO
+toChartData()
