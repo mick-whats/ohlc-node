@@ -1,5 +1,5 @@
-_ = require 'lodash'
-moment = require 'moment'
+_ = require '../../node_modules/lodash/lodash.min.js'
+moment = require '../../node_modules/moment/min/moment.min.js'
 
 DATE_FORMAT = 'YYYY-MM-DD'
 
@@ -27,60 +27,112 @@ class Ohlc
         }
       else
         throw new Error('ArrayType Or ObjectType Required')
-
-  addSma: (range) ->
+    @items = _.sortBy @items,(item)-> moment(item.Date).unix()
+    @opts = {}
+    @opts.round = (val)-> _.round(val)
+    return
+  round: (fn)->
+    if _.isFunction(fn)
+      @opts.round = fn
+      return @
+    else
+      num = Number(fn)
+      if _.isNaN(num)
+        return @
+      else
+        @opts.round = (val)-> _.round(val,num)
+        return @
+  start: (date)->
+    @opts.startDate = date
+    @
+  end: (date)->
+    @opts.endDate = date
+    @
+  sma: (range...) ->
+    @opts.smas = range
+    @
+  _addSma = (range,items,round) ->
     key = "sma#{range}"
-    @items.forEach (item,i,arr)->
+    items.forEach (item,i,arr)->
       if i < range - 1
         item[key] = null
       else
         refItems = arr[i-(range-1)..i]
-        item[key] = _.round _.meanBy(refItems,'Close')
-  
-  toDays: ->
-    return _.cloneDeep(@items)
-  toWeeks: ->
-    items = _.cloneDeep(@items)
-    groups = _.groupBy items, (item)-> moment(item.Date).format('gggg-ww')
-    Object.keys(groups).map (_week)->
-      weekItems = groups[_week]
-      weekItems = _.sortBy weekItems, (item)-> moment(item.Date).unix()
-      _m = moment(weekItems[0].Date)
-      _weekDay = _m.format('d')
-      {
-        "Date": _m.subtract(_weekDay,'days').format(DATE_FORMAT)
-        Open: weekItems[0].Open
-        Close: _.last(weekItems).Close
-        High: _.maxBy(weekItems,'High').High
-        Low: _.minBy(weekItems,'Low').Low
-        Volume: _.sumBy(weekItems, 'Volume')
-      }
-    
-  toMonths: ->
-    items = _.cloneDeep(@items)
-    groups = _.groupBy items, (item)-> moment(item.Date).format('YYYY-MM')
-    Object.keys(groups).map (_month)->
-      monthItems = groups[_month]
-      monthItems = _.sortBy monthItems, (item)-> moment(item.Date).unix()
-      {
-        "Date": moment(monthItems[0].Date).format('YYYY-MM-01')
-        Open: monthItems[0].Open
-        Close: _.last(monthItems).Close
-        High: _.maxBy(monthItems,'High').High
-        Low: _.minBy(monthItems,'Low').Low
-        Volume: _.sumBy(monthItems, 'Volume')
-      }
-  toChartData: (period, opts)->
-    opts = opts or {}
-    obj = {}
-    fn = switch period
-      when 'm', 'M','months', 'Months'
-        'toMonths'
-      when 'w', 'W','weeks', 'Weeks'
-        'toWeeks'
+        item[key] = round _.meanBy(refItems,'Close')
+    return items
+
+  vwma: (range...) ->
+    @opts.vwmas = range
+    @
+  _addVwma = (range,items,round) ->
+    key = "vwma#{range}"
+    items.forEach (item,i,arr)->
+      if i < range - 1
+        item[key] = null
       else
-        'toDays'
-    items = @[fn]()
+        refItems = arr[i-(range-1)..i]
+        sumPrice = _.sumBy refItems, (o)-> o.Close * o.Volume
+        sumVolume = _.sumBy(refItems,'Volume')
+        item[key] = round(sumPrice/sumVolume)
+    return items
+
+  _convertingPeriodBy = (period,items,opts)->
+    opts = opts or {}
+    round = opts.round
+    items = switch on
+      when /^mo/.test(period)
+        groups = _.groupBy items, (item)-> moment(item.Date).format('YYYY-MM')
+        Object.keys(groups).map (_month)->
+          monthItems = groups[_month]
+          monthItems = _.sortBy monthItems, (item)-> moment(item.Date).unix()
+          {
+            "Date": moment(monthItems[0].Date).format('YYYY-MM-01')
+            Open: monthItems[0].Open
+            Close: _.last(monthItems).Close
+            High: _.maxBy(monthItems,'High').High
+            Low: _.minBy(monthItems,'Low').Low
+            Volume: _.sumBy(monthItems, 'Volume')
+          }
+      when /^we/.test(period)
+        groups = _.groupBy items, (item)-> moment(item.Date).format('gggg-ww')
+        Object.keys(groups).map (_week)->
+          weekItems = groups[_week]
+          weekItems = _.sortBy weekItems, (item)-> moment(item.Date).unix()
+          _m = moment(weekItems[0].Date)
+          _weekDay = _m.format('d')
+          {
+            "Date": _m.subtract(_weekDay,'days').format(DATE_FORMAT)
+            Open: weekItems[0].Open
+            Close: _.last(weekItems).Close
+            High: _.maxBy(weekItems,'High').High
+            Low: _.minBy(weekItems,'Low').Low
+            Volume: _.sumBy(weekItems, 'Volume')
+          }
+      else
+        items
+    if opts.smas
+      opts.smas.forEach (range)->
+        _addSma(range,items,opts.round)
+    if opts.vwmas
+      opts.vwmas.forEach (range)->
+        _addVwma(range,items,opts.round)
+    if opts.startDate or opts.endDate
+      start = opts.startDate or items[0].Date
+      end = opts.endDate or _.last(items).Date
+      items = _.reject items, (item)->
+        return moment(item.Date).isBefore(start) or moment(item.Date).isAfter(end)
+    return items
+  toDaily: ->
+    return _convertingPeriodBy('',@items,@opts)
+  toWeekly: ->
+    return _convertingPeriodBy('weekly',@items,@opts)
+  toMonthly: ->
+    _convertingPeriodBy('monthly',@items,@opts)
+  value: (period)->
+    _convertingPeriodBy(period, @items,@opts)
+  toChartData: (period)->
+    obj = {}
+    items = _convertingPeriodBy(period,@items,@opts)
     obj.candle = items.map (item)->
       [
         moment.utc(item.Date).valueOf()
@@ -94,15 +146,16 @@ class Ohlc
         moment.utc(item.Date).valueOf()
         item.Volume
       ]
-    if opts.sma and _.isArray(opts.sma)
-      opts.sma.forEach (smaRange) =>
-        smaRange = Number(smaRange)
-        if _.isNaN(smaRange)
-          return
-        propName = "sma#{smaRange}"
-        @addSma(smaRange)
-        obj[propName] = @items.map (item,i)-> [moment.utc(item.Date).valueOf(),item[propName]]
+    
+    if @opts.smas
+      @opts.smas.forEach (range)->
+        name = "sma#{range}"
+        obj[name] = items.map (item)->
+          [
+            moment.utc(item.Date).valueOf()
+            item[name]
+          ]
     return obj
 
         
-module.exports = Ohlc
+module.exports = (data)-> new Ohlc(data)
