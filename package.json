@@ -1,9 +1,10 @@
 {
   "name": "ohlc",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "scripts": {
     "test": "ava",
-    "compile": "coffee -o ./ -cw coffee/",
+    "build": "webpack&ava -w&npm run compile",
+    "compile": "coffee -o ./test/ -cw coffee/test/*.coffee",
     "watch": "npm run compile &ava -w",
     "cover": "nyc ava",
     "report": "nyc report --reporter=html",
@@ -15,9 +16,17 @@
     "moment": "^2.22.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
     "ava": "^0.25.0",
+    "babel-loader": "^8.0.4",
+    "babel-polyfill": "^6.26.0",
+    "coffee-loader": "^0.9.0",
     "coffeescript": "^2.2.3",
-    "nyc": "^13.0.1"
+    "nyc": "^13.0.1",
+    "source-map-support": "^0.5.9",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.1"
   },
   "ava": {
     "files": [
@@ -33,7 +42,7 @@
     "color": true,
     "watch": false
   },
-  "main": "lib/index.js",
+  "main": "dist/ohlc.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/mick-whats/ohlc-node"
