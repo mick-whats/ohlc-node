@@ -1,6 +1,6 @@
 {
   "name": "ohlc",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "scripts": {
     "test": "ava",
     "build": "webpack&ava -w&npm run compile",
