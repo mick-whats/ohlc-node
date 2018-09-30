@@ -3,9 +3,9 @@
   "version": "2.0.2",
   "scripts": {
     "test": "ava",
-    "build": "webpack&ava -w&npm run compile",
+    "build": "npm run compile&& webpack --mode production &&ava",
     "compile": "coffee -o ./test/ -cw coffee/test/*.coffee",
-    "watch": "npm run compile &ava -w",
+    "watch": "webpack --watch --mode development &ava -w&npm run compile",
     "cover": "nyc ava",
     "report": "nyc report --reporter=html",
     "update:snap": "ava --update-snapshots"
