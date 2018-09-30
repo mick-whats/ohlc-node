@@ -148,8 +148,15 @@ test 'round().sma(range)', (t) ->
   t.is prices[100].sma75,360.02
   
 test 'toChartData()', (t) ->
+  chartData = ohlc(arrayData).sma(5,10).vwma(12,26).toChartData()
+  t.deepEqual Object.keys(chartData),['candle', 'volume','sma5','sma10','vwma12','vwma26']
+  dailyData = ohlc(arrayData).sma(5,10).vwma(12,26).toDaily()
+  t.deepEqual chartData.sma5[10],[1484784000000,341]
+  [0...dailyData.length].forEach (i)->
+    t.is chartData.sma5[i][1], dailyData[i].sma5
+    t.is chartData.vwma12[i][1], dailyData[i].vwma12
+test 'toChartData()', (t) ->
   chartData = ohlc(arrayData).toChartData()
-  # chartData = prices.toChartData()
   t.deepEqual Object.keys(chartData),['candle', 'volume']
   t.deepEqual chartData.candle[0],    [
     1483488000000,

@@ -197,9 +197,24 @@
   });
 
   test('toChartData()', function(t) {
+    var chartData, dailyData, ref;
+    chartData = ohlc(arrayData).sma(5, 10).vwma(12, 26).toChartData();
+    t.deepEqual(Object.keys(chartData), ['candle', 'volume', 'sma5', 'sma10', 'vwma12', 'vwma26']);
+    dailyData = ohlc(arrayData).sma(5, 10).vwma(12, 26).toDaily();
+    t.deepEqual(chartData.sma5[10], [1484784000000, 341]);
+    return (function() {
+      var results = [];
+      for (var j = 0, ref = dailyData.length; 0 <= ref ? j < ref : j > ref; 0 <= ref ? j++ : j--){ results.push(j); }
+      return results;
+    }).apply(this).forEach(function(i) {
+      t.is(chartData.sma5[i][1], dailyData[i].sma5);
+      return t.is(chartData.vwma12[i][1], dailyData[i].vwma12);
+    });
+  });
+
+  test('toChartData()', function(t) {
     var chartData;
     chartData = ohlc(arrayData).toChartData();
-    // chartData = prices.toChartData()
     t.deepEqual(Object.keys(chartData), ['candle', 'volume']);
     t.deepEqual(chartData.candle[0], [1483488000000, 348, 350, 346, 350]);
     return t.deepEqual(chartData.volume[0], [1483488000000, 68700]);

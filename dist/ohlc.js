@@ -206,7 +206,7 @@ Ohlc = (function() {
     }
 
     toChartData(period) {
-      var items, obj;
+      var items, obj, otherItems;
       obj = {};
       items = _convertingPeriodBy(period, this.items, this.opts);
       obj.candle = items.map(function(item) {
@@ -215,15 +215,12 @@ Ohlc = (function() {
       obj.volume = items.map(function(item) {
         return [moment.utc(item.Date).valueOf(), item.Volume];
       });
-      if (this.opts.smas) {
-        this.opts.smas.forEach(function(range) {
-          var name;
-          name = `sma${range}`;
-          return obj[name] = items.map(function(item) {
-            return [moment.utc(item.Date).valueOf(), item[name]];
-          });
+      otherItems = _.difference(Object.keys(items[0]), ['Date', 'Open', 'High', 'Low', 'Close', 'Volume']);
+      otherItems.forEach(function(name) {
+        return obj[name] = items.map(function(item) {
+          return [moment.utc(item.Date).valueOf(), item[name]];
         });
-      }
+      });
       return obj;
     }
 

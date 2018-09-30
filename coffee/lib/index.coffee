@@ -146,15 +146,14 @@ class Ohlc
         moment.utc(item.Date).valueOf()
         item.Volume
       ]
-    
-    if @opts.smas
-      @opts.smas.forEach (range)->
-        name = "sma#{range}"
-        obj[name] = items.map (item)->
-          [
-            moment.utc(item.Date).valueOf()
-            item[name]
-          ]
+    otherItems = _.difference Object.keys(items[0]),
+      ['Date','Open','High','Low','Close','Volume']
+    otherItems.forEach (name)->
+      obj[name] = items.map (item)->
+        [
+          moment.utc(item.Date).valueOf()
+          item[name]
+        ]
     return obj
 
         
