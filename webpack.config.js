@@ -6,9 +6,9 @@
 
   module.exports = {
     // mode: 'production'
-    mode: 'development',
+    // mode: 'development'
     devtool: 'source-map',
-    watch: true,
+    watch: false,
     entry: ['babel-polyfill', './coffee/lib/index.coffee'],
     output: {
       filename: 'ohlc.js',

@@ -1,9 +1,9 @@
 path = require('path')
 module.exports =
-  mode: 'production'
+  # mode: 'production'
   # mode: 'development'
   devtool: 'source-map',
-  watch: true
+  watch: false
   entry: ['babel-polyfill', './coffee/lib/index.coffee'],
   output:
     filename: 'ohlc.js'

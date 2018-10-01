@@ -3,9 +3,10 @@
   "version": "2.0.2",
   "scripts": {
     "test": "ava",
-    "build": "npm run compile&& webpack --mode production &&ava",
-    "compile": "coffee -o ./test/ -cw coffee/test/*.coffee",
-    "watch": "webpack --watch --mode development &ava -w&npm run compile",
+    "build": "npm run compile_webpack_config&& webpack --mode production &&nyc ava",
+    "compile_test": "coffee -o ./test/ -cw coffee/test/*.coffee",
+    "compile_webpack_config": "coffee -o ./ -c coffee/*.coffee",
+    "watch": "webpack --watch --mode development &ava -w&npm run compile_test",
     "cover": "nyc ava",
     "report": "nyc report --reporter=html",
     "update:snap": "ava --update-snapshots"
