@@ -155,6 +155,16 @@ test 'toChartData()', (t) ->
   [0...dailyData.length].forEach (i)->
     t.is chartData.sma5[i][1], dailyData[i].sma5
     t.is chartData.vwma12[i][1], dailyData[i].vwma12
+
+test 'toChartData() by readme', (t) ->
+  chartData = ohlc(arrayData).sma(5,25).toChartData()
+  t.deepEqual Object.keys(chartData),['candle', 'volume','sma5','sma25']
+  t.deepEqual chartData.candle[90], [1494979200000,370,372,365,369]
+  t.deepEqual chartData.volume[90], [1494979200000,32300]
+  t.deepEqual chartData.sma5[90], [1494979200000,372]
+  t.deepEqual chartData.sma25[90], [1494979200000,359]
+  t.is moment(chartData.candle[90][0]).format('YYYY-MM-DD'),'2017-05-17'
+
 test 'toChartData()', (t) ->
   chartData = ohlc(arrayData).toChartData()
   t.deepEqual Object.keys(chartData),['candle', 'volume']
