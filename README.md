@@ -4,37 +4,42 @@
 ![npm](https://img.shields.io/npm/dw/ohlc.svg)
 [![](https://data.jsdelivr.com/v1/package/npm/ohlc/badge)](https://www.jsdelivr.com/package/npm/ohlc)
 [![Build Status](https://travis-ci.org/mick-whats/ohlc-node.svg?branch=master)](https://travis-ci.org/mick-whats/ohlc-node)
+
+> Major update to version 2
+
+## install
+
+### node.js
+
+```shell
+npm install ohlc
+```
+
+```js
+var ohlc = require('ohlc')
+```
+
+### Browser
+
+```html
+<script src="dist/ohlc.js"></script>
+```
+
+### CDN
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/mick-whats/ohlc-node@2.0.1/dist/ohlc.js"></script>
+```
+
 ## sumple data
 
 ```data.json
 arrayData = [
- [
-    "2017-01-04",
-    348,
-    350,
-    346,
-    350,
-    68700
-  ],
-  [
-    "2017-01-05",
-    350,
-    353,
-    349,
-    352,
-    59200
-  ],
-  [
-    "2017-01-06",
-    350,
-    358,
-    350,
-    356,
-    168900
-  ]
+  ["2017-01-04",348,350,346,350,68700],
+  ["2017-01-05",350,353,349,352,59200],
+  ["2017-01-06",350,358,350,356,168900]
 ]
 ```
-
 
 ## toDaily()
 
@@ -121,6 +126,23 @@ ohlc(arrayData).toMonthly()
 
 ## toChartData(period)
 
+```js
+var chartData = ohlc(arrayData).sma(5, 25).toChartData();
+
+Object.keys(chartData)
+//=> ['candle', 'volume', 'sma5', 'sma25']
+
+chartData.candle[90]
+//=> [1494979200000, 370, 372, 365, 369]
+chartData.volume[90]
+//=> [1494979200000, 32300]
+chartData.sma5[90]
+//=> [1494979200000, 372]
+chartData.sma25[90]
+//=> [1494979200000, 359]
+moment.utc(1494979200000).format('YYYY-MM-DD')
+//=> '2017-05-17'
+```
 
 ## start() and end()
 
@@ -164,6 +186,3 @@ ohlc(arrayData).sma(5, 25, 75).toDaily();
   ...
 ]
 ```
-
-## TODO
-toChartData()
