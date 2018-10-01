@@ -5,7 +5,7 @@
 [![](https://data.jsdelivr.com/v1/package/npm/ohlc/badge)](https://www.jsdelivr.com/package/npm/ohlc)
 [![Build Status](https://travis-ci.org/mick-whats/ohlc-node.svg?branch=master)](https://travis-ci.org/mick-whats/ohlc-node)
 
-> Major update to version 2
+> Major update for version 2
 
 ## install
 
@@ -28,6 +28,8 @@ var ohlc = require('ohlc')
 ### CDN
 
 ```html
+<script src="https://cdn.jsdelivr.net/npm/ohlc"></script>
+
 <script src="https://cdn.jsdelivr.net/gh/mick-whats/ohlc-node@2.0.1/dist/ohlc.js"></script>
 ```
 
@@ -126,6 +128,10 @@ ohlc(arrayData).toMonthly()
 
 ## toChartData(period)
 
+It complies with high charts
+
+[Candlestick \| Highcharts](https://www.highcharts.com/stock/demo/candlestick)  
+[https://www\.highcharts\.com/samples/data/aapl\-ohlc\.json](https://www.highcharts.com/samples/data/aapl-ohlc.json)
 ```js
 var chartData = ohlc(arrayData).sma(5, 25).toChartData();
 
