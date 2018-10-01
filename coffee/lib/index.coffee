@@ -155,6 +155,5 @@ class Ohlc
           item[name]
         ]
     return obj
-
         
 module.exports = (data)-> new Ohlc(data)
