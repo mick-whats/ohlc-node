@@ -11,6 +11,8 @@ module.exports =
     library: 'ohlc'
     libraryTarget: 'umd'
     globalObject  : 'this'
+  resolve:
+    extensions: ['.js', '.coffee']
   module: rules: [ {
     test: /\.m?js$/
     exclude: /(node_modules|bower_components)/

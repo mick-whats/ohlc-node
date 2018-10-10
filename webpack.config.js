@@ -17,6 +17,9 @@
       libraryTarget: 'umd',
       globalObject: 'this'
     },
+    resolve: {
+      extensions: ['.js', '.coffee']
+    },
     module: {
       rules: [
         {
