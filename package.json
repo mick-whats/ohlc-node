@@ -11,7 +11,7 @@
     "compile:config": "npm run compile:webpack.config&npm run compile:jest.config&npm run compile:preprocessor",
     "compile": "coffee -o ./ -cw coffee/",
     "watch": "npm run build:dev &ava -w&npm run compile",
-    "watch:jest": "webpack --watch --mode development &jest --watch",
+    "watch:jest": "webpack --watch --mode development &jest --watch&npm run compile",
     "build:dev": "webpack --watch --mode development",
     "cover": "nyc ava",
     "report": "nyc report --reporter=html",

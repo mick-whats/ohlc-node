@@ -8,11 +8,11 @@
 
   moment = require('moment');
 
-  ohlc = require('../../');
+  ohlc = require('../');
 
-  objData = require('../../sample/objData.json');
+  objData = require('../sample/objData.json');
 
-  arrayData = require('../../sample/arrayData.json');
+  arrayData = require('../sample/arrayData.json');
 
   test('constructor with array', function() {
     var prices, sample;

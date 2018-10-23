@@ -8,11 +8,11 @@
 
   moment = require('moment');
 
-  ohlc = require('../../');
+  ohlc = require('../');
 
-  objData = require('../../sample/objData.json');
+  objData = require('../sample/objData.json');
 
-  arrayData = require('../../sample/arrayData.json');
+  arrayData = require('../sample/arrayData.json');
 
   ({decimalPlace} = require('../lib/util'));
 
@@ -30,19 +30,8 @@
     return expect(Math.abs(0.0000001)).toBe(1e-7);
   });
 
-  test('Number.isSafeInteger', function() {
-    expect(Number.isSafeInteger(123456789012345)).toBe(true);
-    expect(Number.isSafeInteger(12345678901234567890)).toBe(false);
-    expect(Number.isSafeInteger(1.23456789012345)).toBe(true);
-    return expect(Number.isSafeInteger(1.2345678901234567890)).toBe(false);
-  });
-
   test.skip('10桁以上のround', function() {
     return expect(Big(0.12345678901234567890123456789012345).round(30).toString()).toBe('0.12345678901234567890');
-  });
-
-  test('fail', function() {
-    return expect(1).toBe(2);
   });
 
 }).call(this);

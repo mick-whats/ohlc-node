@@ -1,16 +1,15 @@
 module.exports =
   verbose: true
-  transform:
-    "^.+\\.coffee$": "<rootDir>/coffee-preprocessor.js"
+  # transform:
+  #   "^.+\\.coffee$": "<rootDir>/coffee-preprocessor.js"
   collectCoverage: false
   testMatch:[
-    "**/spec/**/*.coffee"
+    "**/spec/**/*.js"
   ]
   moduleFileExtensions: [
     "js",
     "jsx",
-    "json",
-    "coffee"
+    "json"
   ]
   watchPathIgnorePatterns: [
     "<rootDir>/node_modules/"

@@ -126,7 +126,7 @@
         Close: 0.7
       }
     ];
-    res = calc.addSma(3, data);
+    res = calc.addSma(3, data, 1);
     return expect(res).toEqual([
       {
         Close: 0.1,
@@ -141,27 +141,27 @@
       {
         Close: 0.3,
         sma3: 0.2,
-        smad3: -33.33
+        smad3: 50
       },
       {
         Close: 0.4,
         sma3: 0.3,
-        smad3: -25
+        smad3: 33.33
       },
       {
         Close: 0.5,
         sma3: 0.4,
-        smad3: -20
+        smad3: 25
       },
       {
         Close: 0.6,
         sma3: 0.5,
-        smad3: -16.67
+        smad3: 20
       },
       {
         Close: 0.7,
         sma3: 0.6,
-        smad3: -14.29
+        smad3: 16.67
       }
     ]);
   });
