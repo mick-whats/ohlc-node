@@ -10,6 +10,7 @@ test.skip 'title', (t) ->
   t.log _.iteratee('user').toString()
   t.pass()
 
+
 test 'js', (t) ->
   a = 17.85
   b = 2.55
@@ -67,7 +68,7 @@ test 'addSma', (t) ->
     {Close: 0.6}
     {Close: 0.7}
   ]
-  res = calc.addSma(3,data)
+  res = calc.addSma(3,data,1)
   t.deepEqual res,[
     {
       Close: 0.1,
@@ -82,27 +83,27 @@ test 'addSma', (t) ->
     {
       Close: 0.3,
       sma3: 0.2,
-      smad3: -33.33,
+      smad3: 50,
     },
     {
       Close: 0.4,
       sma3: 0.3,
-      smad3: -25,
+      smad3: 33.33,
     },
     {
       Close: 0.5,
       sma3: 0.4,
-      smad3: -20,
+      smad3: 25,
     },
     {
       Close: 0.6,
       sma3: 0.5,
-      smad3: -16.67,
+      smad3: 20,
     },
     {
       Close: 0.7,
       sma3: 0.6,
-      smad3: -14.29,
+      smad3: 16.67,
     },
   ]
 

@@ -33,3 +33,6 @@ test 'Number.isSafeInteger',->
 test.skip '10桁以上のround', ->
   expect Big(0.12345678901234567890123456789012345).round(30).toString()
   .toBe '0.12345678901234567890'
+
+test 'fail', ->
+  expect(1).toBe(2)

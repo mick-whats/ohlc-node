@@ -39,4 +39,9 @@ module.exports =
       'Closeの値が不正です'
       'Close value is invalid'
     ]
+    [#6
+      TYPES.ERROR
+      '日付が不正です'
+      'The date is invalid'
+    ]
   ]

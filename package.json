@@ -3,10 +3,16 @@
   "version": "2.0.4",
   "scripts": {
     "test": "ava",
-    "build": "npm run compile_webpack_config&& webpack --mode production &&nyc ava",
+    "build": "npm run compile_webpack_config&& webpack --mode production &&ava",
     "compile_test": "coffee -o ./test/ -cw coffee/test/*.coffee",
-    "compile_webpack_config": "coffee -o ./ -c coffee/*.coffee",
-    "watch": "webpack --watch --mode development &ava -w&npm run compile_test",
+    "compile:webpack.config": "coffee -o ./ -c coffee/webpack.config.coffee",
+    "compile:jest.config": "coffee -o ./ -c coffee/jest.config.coffee",
+    "compile:preprocessor": "coffee -o ./ -c coffee/coffee-preprocessor.coffee",
+    "compile:config": "npm run compile:webpack.config&npm run compile:jest.config&npm run compile:preprocessor",
+    "compile": "coffee -o ./ -cw coffee/",
+    "watch": "npm run build:dev &ava -w&npm run compile",
+    "watch:jest": "webpack --watch --mode development &jest --watch",
+    "build:dev": "webpack --watch --mode development",
     "cover": "nyc ava",
     "report": "nyc report --reporter=html",
     "update:snap": "ava --update-snapshots"
@@ -18,8 +24,10 @@
     "analysis"
   ],
   "dependencies": {
+    "big.js": "^5.1.2",
     "lodash": "^4.17.11",
-    "moment": "^2.22.2"
+    "moment": "^2.22.2",
+    "objelity": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -29,6 +37,7 @@
     "babel-polyfill": "^6.26.0",
     "coffee-loader": "^0.9.0",
     "coffeescript": "^2.2.3",
+    "jest": "^23.6.0",
     "nyc": "^13.0.1",
     "source-map-support": "^0.5.9",
     "webpack": "^4.20.2",

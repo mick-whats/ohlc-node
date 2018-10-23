@@ -2,7 +2,7 @@ module.exports =
   verbose: true
   transform:
     "^.+\\.coffee$": "<rootDir>/coffee-preprocessor.js"
-  
+  collectCoverage: false
   testMatch:[
     "**/spec/**/*.coffee"
   ]
@@ -15,4 +15,4 @@ module.exports =
   watchPathIgnorePatterns: [
     "<rootDir>/node_modules/"
   ]
-  collectCoverage: false
+  # collectCoverage: false

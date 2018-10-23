@@ -3,16 +3,31 @@ _ = require('lodash')
 moment = require 'moment'
 {test} = require 'ava'
 ohlc = require '../'
-data = require './coinmarketcap.json'
+data = require '../sample/coinmarketcap.json'
 
-test.skip 'coinmarketcap format', (t) ->
-  prices = ohlc(data).value()
+test 'coinmarketcap format', (t) ->
+  opts =
+    inputDateFormat: 'MMM DD, YYYY'
+  prices = ohlc(data,opts).value()
   t.deepEqual prices[0],{
-    Close: 266,
-    Date: '2013-07-16',
+    Close: 7078.5,
+    Date: '2017-11-02',
     High: 7367.33,
     Low: 6758.72,
-    Open: 269,
+    Open: 6777.77,
     Volume: 4653770240,
+    'Market Cap': 112909656064
   }
 
+test 'coinmarketcap', (t) ->
+  opts =
+    INPUTDATEFORMAT: 'MMM DD, YYYY'
+  prices = ohlc(data,opts).sma(5,25,75).value()
+  t.snapshot prices
+
+test 'validate', (t) ->
+  opts =
+    INPUTDATEFORMAT: 'MMM DD, YYYY'
+  errors = ohlc(data,opts).validate()
+  # t.log errors
+  t.pass()

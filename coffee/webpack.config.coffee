@@ -2,9 +2,8 @@ path = require('path')
 module.exports =
   # mode: 'production'
   # mode: 'development'
-  devtool: 'source-map',
-  watch: false
-  entry: ['babel-polyfill', './coffee/lib/index.coffee'],
+  # devtool: 'source-map',
+  entry: ['babel-polyfill', './lib/index.js'],
   output:
     filename: 'ohlc.js'
     path: path.join(__dirname, 'dist')
@@ -12,7 +11,7 @@ module.exports =
     libraryTarget: 'umd'
     globalObject  : 'this'
   resolve:
-    extensions: ['.js', '.coffee']
+    extensions: ['.js']
   module: rules: [ {
     test: /\.m?js$/
     exclude: /(node_modules|bower_components)/
@@ -20,8 +19,5 @@ module.exports =
       loader: 'babel-loader'
       options:
         presets: ['@babel/preset-env']
-  },{
-        test: /\.coffee$/,
-        use: [ 'coffee-loader' ]
-    }
+  }
   ]

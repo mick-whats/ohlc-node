@@ -7,9 +7,8 @@
   module.exports = {
     // mode: 'production'
     // mode: 'development'
-    devtool: 'source-map',
-    watch: false,
-    entry: ['babel-polyfill', './coffee/lib/index.coffee'],
+    // devtool: 'source-map',
+    entry: ['babel-polyfill', './lib/index.js'],
     output: {
       filename: 'ohlc.js',
       path: path.join(__dirname, 'dist'),
@@ -18,7 +17,7 @@
       globalObject: 'this'
     },
     resolve: {
-      extensions: ['.js', '.coffee']
+      extensions: ['.js']
     },
     module: {
       rules: [
@@ -31,10 +30,6 @@
               presets: ['@babel/preset-env']
             }
           }
-        },
-        {
-          test: /\.coffee$/,
-          use: ['coffee-loader']
         }
       ]
     }

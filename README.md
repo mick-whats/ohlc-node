@@ -128,6 +128,7 @@ ohlc(arrayData).toMonthly()
 
 ## toChartData(period)
 
+<!-- FIXME: smad機能追加によるREADMEの修正 -->
 It complies with high charts
 
 [Candlestick \| Highcharts](https://www.highcharts.com/stock/demo/candlestick)  
@@ -168,6 +169,7 @@ prices = ohlc(arrayData).start('2017-04-03').end('2017-04-10').toDaily();
 /// prices.length is 6
 ```
 
+<!-- TODO:## round -->
 
 ## sma
 
