@@ -1,9 +1,7 @@
 path = require('path')
 module.exports =
-  # mode: 'production'
-  # mode: 'development'
-  # devtool: 'source-map',
-  entry: ['babel-polyfill', './lib/index.js'],
+  context: path.resolve(__dirname, 'lib/'),
+  entry: ['babel-polyfill', './index.js'],
   output:
     filename: 'ohlc.js'
     path: path.join(__dirname, 'dist')
@@ -13,7 +11,7 @@ module.exports =
   resolve:
     extensions: ['.js']
   module: rules: [ {
-    test: /\.m?js$/
+    test: /\.*js$/
     exclude: /(node_modules|bower_components)/
     use:
       loader: 'babel-loader'
