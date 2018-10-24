@@ -3,12 +3,12 @@
   "version": "2.0.4",
   "scripts": {
     "test": "ava",
-    "build": "npm run compile_webpack_config&& webpack --mode production &&nyc ava",
-    "compile_test": "coffee -o ./test/ -cw coffee/test/*.coffee",
-    "compile_webpack_config": "coffee -o ./ -c coffee/*.coffee",
-    "watch": "webpack --watch --mode development &ava -w&npm run compile_test",
+    "webpack:prod": "webpack --config ./webpack.config.prod.js",
+    "webpack:dev": "webpack -w --config ./webpack.config.dev.js",
+    "build": "coffee -o ./ -c coffee/ && npm run webpack:prod &&ava",
+    "compile": "coffee -o ./ -cw coffee/",
+    "watch": "npm run webpack:dev &ava -w&npm run compile",
     "cover": "nyc ava",
-    "report": "nyc report --reporter=html",
     "update:snap": "ava --update-snapshots"
   },
   "keywords": [
@@ -18,8 +18,10 @@
     "analysis"
   ],
   "dependencies": {
+    "big.js": "^5.1.2",
     "lodash": "^4.17.11",
-    "moment": "^2.22.2"
+    "moment": "^2.22.2",
+    "objelity": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -27,12 +29,12 @@
     "ava": "^0.25.0",
     "babel-loader": "^8.0.4",
     "babel-polyfill": "^6.26.0",
-    "coffee-loader": "^0.9.0",
     "coffeescript": "^2.2.3",
     "nyc": "^13.0.1",
     "source-map-support": "^0.5.9",
     "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.1"
+    "webpack-cli": "^3.1.1",
+    "webpack-merge": "^4.1.4"
   },
   "files": [
     "LICENSE.txt",
@@ -45,12 +47,19 @@
     "source": [
       "**/*.js"
     ],
-    "failFast": false,
+    "failFast": true,
     "serial": false,
     "tap": false,
-    "verbose": true,
+    "verbose": false,
     "color": true,
     "watch": false
+  },
+  "nyc": {
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true
   },
   "main": "dist/ohlc.js",
   "repository": {

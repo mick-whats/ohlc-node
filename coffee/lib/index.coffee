@@ -1,47 +1,95 @@
-_ = require '../../node_modules/lodash/lodash.min.js'
-moment = require '../../node_modules/moment/min/moment.min.js'
-
-DATE_FORMAT = 'YYYY-MM-DD'
-
+_ = require '../node_modules/lodash/lodash.min.js'
+moment = require '../node_modules/moment/min/moment.min.js'
+objelity = require('objelity')
+calc = require('./calc')
+util = require './util'
+OUTPUT_DATE_FORMAT = 'YYYY-MM-DD'
+PROP_NAMES =
+  inputDateFormat: 'inputDateFormat'
 class Ohlc
-  constructor: (items) ->
-    @items = items.map (item)->
+  _parseNumber = (str)->
+    if _.isString(str)
+      str = str.split(',').join('').trim()
+    return parseFloat(str)
+  momentOrThrow = (date,opts)->
+    inputDateFormat = opts[PROP_NAMES.inputDateFormat]
+    m = moment(date,inputDateFormat)
+    if m.isValid()
+      return m
+    else
+      throw new TypeError("invalid date: #{date}")
+
+  constructor: (items,_opts) ->
+    if _opts and _.isPlainObject(_opts)
+      @opts = objelity.mapObject _opts,(val,path)->
+        if /^inputDateFormat$/i.test(path)
+          return [PROP_NAMES.inputDateFormat, val]
+        else
+          return [path,val]
+    else
+      @opts = {}
+    if _.isPlainObject items
+      if _.get(items,'dataset.data',null)
+        items = items.dataset.data
+      else if _.get(items,'data',null)
+        items = items.data
+      else
+        throw new Error('inconsistent datatypes: expected Array got Object.')
+    @org = items
+    @items = items.map (item)=>
       if Array.isArray(item)
         return {
-          "Date": moment(item[0]).format(DATE_FORMAT)
-          Open:  item[1]
-          High:  item[2]
-          Low:   item[3]
-          Close: item[4]
-          Volume:item[5]
+          "Date": momentOrThrow(item[0],@opts).format(OUTPUT_DATE_FORMAT)
+          # "Date": moment(item[0]).format(OUTPUT_DATE_FORMAT)
+          Open:  _parseNumber.call @, item[1]
+          High:  _parseNumber.call @, item[2]
+          Low:   _parseNumber.call @, item[3]
+          Close: _parseNumber.call @, item[4]
+          Volume:_parseNumber item[5]
         }
       else if _.isPlainObject(item)
-        d = item.Date or item.date or item.DateTime or item.dateTime
-        return {
-          "Date": moment(d).format(DATE_FORMAT)
-          Open:  item.Open or item.open
-          High:  item.High or item.high
-          Low:   item.Low or item.low
-          Close: item.Close or item.close
-          Volume:item.Volume or item.volume
-        }
+        return objelity.mapObject item, (val, path)=>
+          _path = path
+          _val  = _parseNumber(val)
+          if path.match(/date/i)
+            _path = 'Date'
+            _val =  momentOrThrow(val,@opts).format(OUTPUT_DATE_FORMAT)
+          else if path.match(/open/i)
+            _path = 'Open'
+          else if path.match(/high/i)
+            _path = 'High'
+          else if path.match(/low/i)
+            _path = 'Low'
+          else if path.match(/close/i)
+            _path = 'Close'
+          else if path.match(/volume/i)
+            _path = 'Volume'
+          return [_path, _val]
       else
-        throw new Error('ArrayType Or ObjectType Required')
+        throw new Error('inconsistent datatypes')
     @items = _.sortBy @items,(item)-> moment(item.Date).unix()
-    @opts = {}
-    @opts.round = (val)-> _.round(val)
+    
+    @opts.round = do=>
+      min = _.minBy(@items,'Low').Low
+      return util.decimalPlace(min)
     return
-  round: (fn)->
-    if _.isFunction(fn)
-      @opts.round = fn
-      return @
-    else
-      num = Number(fn)
-      if _.isNaN(num)
+  validate: (compact) ->
+    require('./validate').call(@,compact)
+  
+  modify: ->
+    require('./modify').all.call(@)
+  round: (num)->
+    if _.isNumber(num)
+      if Number.isNaN(num)
+        return @
+      else if num <= 0
+        @opts.round = 0
         return @
       else
-        @opts.round = (val)-> _.round(val,num)
+        @opts.round = num
         return @
+    else
+      return @
   start: (date)->
     @opts.startDate = date
     @
@@ -51,33 +99,11 @@ class Ohlc
   sma: (range...) ->
     @opts.smas = range
     @
-  _addSma = (range,items,round) ->
-    key = "sma#{range}"
-    items.forEach (item,i,arr)->
-      if i < range - 1
-        item[key] = null
-      else
-        refItems = arr[i-(range-1)..i]
-        item[key] = round _.meanBy(refItems,'Close')
-    return items
-
   vwma: (range...) ->
     @opts.vwmas = range
     @
-  _addVwma = (range,items,round) ->
-    key = "vwma#{range}"
-    items.forEach (item,i,arr)->
-      if i < range - 1
-        item[key] = null
-      else
-        refItems = arr[i-(range-1)..i]
-        sumPrice = _.sumBy refItems, (o)-> o.Close * o.Volume
-        sumVolume = _.sumBy(refItems,'Volume')
-        item[key] = round(sumPrice/sumVolume)
-    return items
 
   _convertingPeriodBy = (period,items,opts)->
-    opts = opts or {}
     round = opts.round
     items = switch on
       when /^mo/.test(period)
@@ -91,7 +117,7 @@ class Ohlc
             Close: _.last(monthItems).Close
             High: _.maxBy(monthItems,'High').High
             Low: _.minBy(monthItems,'Low').Low
-            Volume: _.sumBy(monthItems, 'Volume')
+            Volume: calc.sumBy(monthItems, 'Volume')
           }
       when /^we/.test(period)
         groups = _.groupBy items, (item)-> moment(item.Date).format('gggg-ww')
@@ -101,21 +127,23 @@ class Ohlc
           _m = moment(weekItems[0].Date)
           _weekDay = _m.format('d')
           {
-            "Date": _m.subtract(_weekDay,'days').format(DATE_FORMAT)
+            "Date": _m.subtract(_weekDay,'days').format(OUTPUT_DATE_FORMAT)
             Open: weekItems[0].Open
             Close: _.last(weekItems).Close
             High: _.maxBy(weekItems,'High').High
             Low: _.minBy(weekItems,'Low').Low
-            Volume: _.sumBy(weekItems, 'Volume')
+            Volume: calc.sumBy(weekItems, 'Volume')
           }
       else
         items
     if opts.smas
       opts.smas.forEach (range)->
-        _addSma(range,items,opts.round)
+        calc.addSma(range,items,opts.round)
+        # calc.addSma(range,items,(val)->_.round(val,opts.round))
     if opts.vwmas
       opts.vwmas.forEach (range)->
-        _addVwma(range,items,opts.round)
+        calc.addVwma(range,items,opts.round)
+        # _addVwma(range,items,(val)->_.round(val,opts.round))
     if opts.startDate or opts.endDate
       start = opts.startDate or items[0].Date
       end = opts.endDate or _.last(items).Date
@@ -156,4 +184,5 @@ class Ohlc
         ]
     return obj
         
-module.exports = (data)-> new Ohlc(data)
+
+module.exports = (data,opts)-> new Ohlc(data,opts)

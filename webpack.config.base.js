@@ -5,11 +5,6 @@
   path = require('path');
 
   module.exports = {
-    // mode: 'production'
-    // mode: 'development'
-    devtool: 'source-map',
-    // devtool: 'inline-source-map',
-    // devtool: 'eval-source-map',
     context: path.resolve(__dirname, 'lib/'),
     entry: ['babel-polyfill', './index.js'],
     output: {
@@ -17,9 +12,7 @@
       path: path.join(__dirname, 'dist'),
       library: 'ohlc',
       libraryTarget: 'umd',
-      globalObject: 'this',
-      // devtoolModuleFilenameTemplate: '[absolute-resource-path]'
-      devtoolModuleFilenameTemplate: 'lib/[resource-path]'
+      globalObject: 'this'
     },
     resolve: {
       extensions: ['.js']
@@ -27,7 +20,7 @@
     module: {
       rules: [
         {
-          test: /\.m?js$/,
+          test: /\.*js$/,
           exclude: /(node_modules|bower_components)/,
           use: {
             loader: 'babel-loader',
