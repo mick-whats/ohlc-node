@@ -3,7 +3,6 @@ moment = require '../node_modules/moment/min/moment.min.js'
 objelity = require('objelity')
 calc = require('./calc')
 util = require './util'
-# modify = require './modify'
 OUTPUT_DATE_FORMAT = 'YYYY-MM-DD'
 PROP_NAMES =
   inputDateFormat: 'inputDateFormat'
@@ -21,7 +20,6 @@ class Ohlc
       throw new TypeError("invalid date: #{date}")
 
   constructor: (items,_opts) ->
-    #TODO: modify if volume is zeroを追加
     if _opts and _.isPlainObject(_opts)
       @opts = objelity.mapObject _opts,(val,path)->
         if /^inputDateFormat$/i.test(path)

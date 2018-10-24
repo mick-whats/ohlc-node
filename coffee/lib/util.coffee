@@ -1,4 +1,3 @@
-Big = require('big.js')
 _ = require '../node_modules/lodash/lodash.min.js'
 
 

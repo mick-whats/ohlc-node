@@ -1,4 +1,4 @@
-Big = require('big.js')
+Big = require('../node_modules/big.js/big.min.js')
 _ = require '../node_modules/lodash/lodash.min.js'
 
 
