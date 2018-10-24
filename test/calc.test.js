@@ -12,16 +12,6 @@
 
   Big = require('big.js');
 
-  test.skip('title', function(t) {
-    t.log(_.iteratee({
-      'user': 'barney',
-      'active': true
-    }).toString());
-    t.log(_.iteratee(['user', 'fred']).toString());
-    t.log(_.iteratee('user').toString());
-    return t.pass();
-  });
-
   test('js', function(t) {
     var a, b;
     a = 17.85;
