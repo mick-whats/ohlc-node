@@ -14,6 +14,26 @@
 
   data = require('../sample/quandlSample.json');
 
+  test('invalid data format', function(t) {
+    var err;
+    data = ["2017-01-10", 350, 353, 349, 352, 59200];
+    err = t.throws(function() {
+      return ohlc(data);
+    });
+    return t.is(err.message, 'inconsistent datatypes');
+  });
+
+  test('invalid data format', function(t) {
+    var err;
+    data = {
+      prices: [["2017-01-10", 350, 353, 349, 352, 59200]]
+    };
+    err = t.throws(function() {
+      return ohlc(data);
+    });
+    return t.is(err.message, 'inconsistent datatypes: expected Array got Object.');
+  });
+
   test('invalid date', function(t) {
     var err;
     data = [["2017-01-35", 350, 353, 349, 352, 59200]];

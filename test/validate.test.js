@@ -17,8 +17,45 @@
   test('validate', function(t) {
     var inValid;
     inValid = ohlc(data).validate();
-    t.is(inValid.length, 2);
-    return t.pass();
+    return t.is(inValid.length, 2);
+  });
+
+  test('validate verbose', function(t) {
+    var inValid;
+    inValid = ohlc(data).validate(false);
+    return t.is(inValid.length, 93);
+  });
+
+  test('volume minus', function(t) {
+    var inValid;
+    inValid = ohlc([['20170808', 1, 1, 1, 1, -2]]).validate();
+    t.is(inValid.length, 1);
+    return t.is(inValid[0].msg, 'volume is Negative Number.');
+  });
+
+  test('not Close', function(t) {
+    var inValid;
+    inValid = ohlc([['20170808', 1, 1, 1, 0, 1]]).validate();
+    t.is(inValid.length, 1);
+    return t.is(inValid[0].msg, 'Close value is invalid');
+  });
+
+  test('not Close', function(t) {
+    var inValid;
+    inValid = ohlc([
+      [
+        '20170808',
+        1,
+        1,
+        1,
+        1,
+        {
+          a: 1
+        }
+      ]
+    ]).validate();
+    t.is(inValid.length, 1);
+    return t.is(inValid[0].msg, 'Item value is invalid');
   });
 
 }).call(this);

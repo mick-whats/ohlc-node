@@ -73,8 +73,8 @@ class Ohlc
       min = _.minBy(@items,'Low').Low
       return util.decimalPlace(min)
     return
-  validate: ->
-    require('./validate').call(@)
+  validate: (compact) ->
+    require('./validate').call(@,compact)
   
   modify: ->
     require('./modify').all.call(@)
@@ -104,7 +104,6 @@ class Ohlc
     @
 
   _convertingPeriodBy = (period,items,opts)->
-    opts = opts or {}
     round = opts.round
     items = switch on
       when /^mo/.test(period)

@@ -17,6 +17,27 @@
 
   arrayData = require('../sample/arrayData.json');
 
+  test('constructor data format', function(t) {
+    var data, o;
+    data = {
+      data: [['2017-12-12', 1, 1, 1, 1, 9]]
+    };
+    o = ohlc(data);
+    return t.is(o.items[0].Date, '2017-12-12');
+  });
+
+  test('constructor rename options', function(t) {
+    var data, o, opts;
+    opts = {
+      inputDateFormat: 'MM-DD-YYYY',
+      otherOption: 1
+    };
+    data = [['12-13-2017', 1, 1, 1, 1, 9]];
+    o = ohlc(data, opts);
+    t.is(o.items[0].Date, '2017-12-13');
+    return t.deepEqual(Object.keys(o.opts), ['inputDateFormat', 'otherOption', 'round']);
+  });
+
   test('constructor with array', function(t) {
     var prices, sample;
     prices = ohlc(arrayData).toDaily();

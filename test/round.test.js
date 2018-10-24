@@ -114,4 +114,16 @@
     return t.deepEqual(chartData.volume[0], [1483488000000, 68700]);
   });
 
+  test('round minus is zero', function(t) {
+    var prices;
+    prices = ohlc(arrayData).sma(5, 25, 75).round(-1).toDaily();
+    return t.is(prices[100].sma5, 373);
+  });
+
+  test('round NaN is zero', function(t) {
+    var prices;
+    prices = ohlc(arrayData).sma(5, 25, 75).round(0 / 0).toDaily();
+    return t.is(prices[100].sma5, 373);
+  });
+
 }).call(this);

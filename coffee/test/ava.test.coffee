@@ -8,6 +8,18 @@ ohlc = require '../'
 objData = require '../sample/objData.json'
 arrayData = require '../sample/arrayData.json'
 
+test 'constructor data format', (t) ->
+  data = {data: [['2017-12-12',1,1,1,1,9]]}
+  o = ohlc(data)
+  t.is o.items[0].Date, '2017-12-12'
+test 'constructor rename options', (t) ->
+  opts =
+    inputDateFormat: 'MM-DD-YYYY'
+    otherOption: 1
+  data = [['12-13-2017',1,1,1,1,9]]
+  o = ohlc(data,opts)
+  t.is o.items[0].Date, '2017-12-13'
+  t.deepEqual Object.keys(o.opts),['inputDateFormat','otherOption','round']
 
 test 'constructor with array', (t) ->
   prices = ohlc(arrayData).toDaily()

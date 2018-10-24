@@ -47,10 +47,10 @@
     "source": [
       "**/*.js"
     ],
-    "failFast": false,
+    "failFast": true,
     "serial": false,
     "tap": false,
-    "verbose": true,
+    "verbose": false,
     "color": true,
     "watch": false
   },

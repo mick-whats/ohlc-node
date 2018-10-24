@@ -24,7 +24,6 @@ module.exports = calc =
     return parseFloat(res)
   addSma: (range,items,roundNumber) ->
     roundNumber = roundNumber or 0
-    round = (val)->_.round(val,roundNumber)
     key = "sma#{range}"
     d_key = "smad#{range}"
     items.forEach (item,i,arr)->
@@ -34,12 +33,11 @@ module.exports = calc =
       else
         refItems = arr[i-(range-1)..i]
         sma = calc.meanBy(refItems,'Close')
-        item[key] = round(sma)
+        item[key] = parseFloat Big(sma).round(roundNumber)
         item[d_key] = calc.changeIn(sma,item.Close)
     return items
   addVwma: (range,items,roundNumber) ->
     roundNumber = roundNumber or 0
-    round = (val)->_.round(val,roundNumber)
     key = "vwma#{range}"
     d_key = "vwmad#{range}"
     items.forEach (item,i,arr)->
@@ -52,5 +50,5 @@ module.exports = calc =
         sumVolume = calc.sumBy(refItems,'Volume')
         vwma = Big(sumPrice).div(sumVolume)
         item[key] = parseFloat vwma.round(roundNumber)
-        item[d_key] = parseFloat calc.changeIn(parseFloat(vwma),item.Close)
+        item[d_key] = calc.changeIn(parseFloat(vwma),item.Close)
     return items
